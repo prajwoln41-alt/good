@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ACCESS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          'display': ['Cormorant Garamond', 'serif'],
+          'mono': ['Space Mono', 'monospace'],
+        },
+        animation: {
+          'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+          'flicker': 'flicker 4s linear infinite',
+          'fadeInUp': 'fadeInUp 1.2s ease forwards',
+          'glitch': 'glitch 0.5s ease',
+          'scanline': 'scanline 8s linear infinite',
+          'breathe': 'breathe 4s ease-in-out infinite',
+        },
+        keyframes: {
+          'pulse-slow': {
+            '0%, 100%': { opacity: '0.3', transform: 'scale(1)' },
+            '50%': { opacity: '1', transform: 'scale(1.6)' },
+          },
+          'flicker': {
+            '0%, 100%': { opacity: '1' },
+            '92%': { opacity: '1' },
+            '93%': { opacity: '0.4' },
+            '94%': { opacity: '1' },
+            '96%': { opacity: '0.6' },
+            '97%': { opacity: '1' },
+          },
+          'fadeInUp': {
+            'from': { opacity: '0', transform: 'translateY(20px)' },
+            'to': { opacity: '1', transform: 'translateY(0)' },
+          },
+          'glitch': {
+            '0%': { opacity: '0' },
+            '20%': { opacity: '0.8' },
+            '40%': { opacity: '0' },
+            '60%': { opacity: '0.6' },
+            '100%': { opacity: '0' },
+          },
+          'scanline': {
+            '0%': { transform: 'translateY(-100%)' },
+            '100%': { transform: 'translateY(100vh)' },
+          },
+          'breathe': {
+            '0%, 100%': { boxShadow: '0 0 20px rgba(255,255,255,0.03)' },
+            '50%': { boxShadow: '0 0 60px rgba(255,255,255,0.08)' },
+          },
+        }
+      }
+    }
+  }
+</script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    cursor: crosshair;
+  }
+
+  .noise {
+    position: fixed;
+    inset: 0;
+    opacity: .03;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='12' cy='12' r='1'/%3E%3Ccircle cx='72' cy='42' r='1'/%3E%3Ccircle cx='110' cy='92' r='1'/%3E%3Ccircle cx='45' cy='115' r='1'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .scanline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(transparent, rgba(255,255,255,0.03), transparent);
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  input[type="password"] {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    width: 100%;
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    letter-spacing: 16px;
+    text-align: center;
+    outline: none;
+    padding: 14px 0;
+    transition: border-color 0.3s ease;
+    caret-color: rgba(255,255,255,0.4);
+  }
+
+  input[type="password"]:focus {
+    border-bottom-color: rgba(255,255,255,0.5);
+  }
+
+  input[type="password"]::placeholder {
+    color: rgba(255,255,255,0.1);
+    letter-spacing: 8px;
+  }
+
+  .card {
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.015);
+    backdrop-filter: blur(20px);
+    border-radius: 2px;
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  .access-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    padding: 14px 0;
+    width: 100%;
+    cursor: crosshair;
+    transition: all 0.4s ease;
+    border-radius: 0;
+  }
+
+  .access-btn:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+  }
+
+  .archive-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInUp 1.2s ease forwards;
+    overflow: auto;
+    padding: 40px 20px;
+  }
+
+  /* Custom audio player */
+  .player-wrap {
+    position: relative;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    cursor: pointer;
+    position: relative;
+    margin: 24px 0 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: rgba(255,255,255,0.6);
+    width: 0%;
+    transition: width 0.1s linear;
+    pointer-events: none;
+  }
+
+  .progress-bar:hover .progress-fill {
+    background: #fff;
+  }
+
+  .play-btn {
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: #fff;
+    border-radius: 50%;
+    cursor: crosshair;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .play-btn:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.5);
+  }
+
+  .waveform {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 28px;
+  }
+
+  .waveform span {
+    display: block;
+    width: 2px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 1px;
+    transition: height 0.1s ease, background 0.3s ease;
+  }
+
+  .waveform.playing span {
+    background: rgba(255,255,255,0.5);
+    animation: wave 1.2s ease-in-out infinite;
+  }
+
+  .waveform span:nth-child(1)  { height: 6px;  animation-delay: 0s; }
+  .waveform span:nth-child(2)  { height: 14px; animation-delay: 0.1s; }
+  .waveform span:nth-child(3)  { height: 20px; animation-delay: 0.2s; }
+  .waveform span:nth-child(4)  { height: 10px; animation-delay: 0.3s; }
+  .waveform span:nth-child(5)  { height: 18px; animation-delay: 0.4s; }
+  .waveform span:nth-child(6)  { height: 8px;  animation-delay: 0.5s; }
+  .waveform span:nth-child(7)  { height: 22px; animation-delay: 0.6s; }
+  .waveform span:nth-child(8)  { height: 12px; animation-delay: 0.7s; }
+  .waveform span:nth-child(9)  { height: 16px; animation-delay: 0.8s; }
+  .waveform span:nth-child(10) { height: 6px;  animation-delay: 0.9s; }
+  .waveform span:nth-child(11) { height: 20px; animation-delay: 1.0s; }
+  .waveform span:nth-child(12) { height: 8px;  animation-delay: 1.1s; }
+
+  @keyframes wave {
+    0%, 100% { transform: scaleY(1); opacity: 0.5; }
+    50%       { transform: scaleY(1.8); opacity: 1; }
+  }
+
+  .glitch-overlay {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: difference;
+    z-index: 999;
+  }
+
+  .show-glitch {
+    animation: glitch 0.5s ease;
+  }
+
+  @media (max-width: 600px) {
+    input[type="password"] { font-size: 22px; letter-spacing: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="scanline"></div>
+<div class="vignette"></div>
+<div class="glitch-overlay" id="glitch"></div>
+
+<!-- LOGIN SCREEN -->
+<div class="relative z-10 w-full h-screen flex items-center justify-center px-5" id="loginScreen">
+  <div class="card w-full max-w-sm px-8 py-10">
+
+    <div class="flex items-center justify-between mb-12">
+      <span class="font-mono text-[10px] tracking-[4px] text-white/30">ENCRYPTED</span>
+      <div class="w-2 h-2 rounded-full bg-white animate-[pulse-slow_3s_ease-in-out_infinite]"></div>
+    </div>
+
+    <h1 class="font-display text-5xl font-light tracking-[10px] text-white/90 mb-3 animate-[flicker_4s_linear_infinite]">ACCESS</h1>
+    <div class="w-8 h-px bg-white/20 mb-8"></div>
+
+    <p class="font-mono text-[11px] tracking-[2px] text-white/25 leading-relaxed mb-10">
+      ENTER PIN TO DECRYPT
+    </p>
+
+    <input type="password" id="pinInput" maxlength="4" placeholder="····" />
+
+    <div class="mt-8">
+      <button class="access-btn" onclick="unlock()">UNLOCK</button>
+    </div>
+
+    <div class="mt-6 font-mono text-[11px] text-white/25 text-center min-h-5" id="error"></div>
+
+    <div class="flex items-center justify-between mt-10 pt-6 border-t border-white/5">
+      <span class="font-mono text-[9px] tracking-[3px] text-white/15">SYS.SECURE</span>
+      <span class="font-mono text-[9px] tracking-[3px] text-white/15">V.01</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ARCHIVE SCREEN -->
+<div class="archive-screen hidden" id="archive">
+  <div class="w-full max-w-sm">
+
+    <div class="flex items-center justify-between mb-12">
+      <span class="font-mono text-[10px] tracking-[4px] text-white/30">DECRYPTED</span>
+      <div class="w-2 h-2 rounded-full bg-white/60"></div>
+    </div>
+
+    <h2 class="font-display text-4xl font-light tracking-[8px] text-white/90 mb-1">SIGNAL</h2>
+    <div class="w-8 h-px bg-white/20 mb-8"></div>
+    <p class="font-mono text-[11px] tracking-[2px] text-white/25 mb-10">THIS IS YOUR NEXT CLUE</p>
+
+    <!-- Audio Player -->
+    <div class="card px-7 py-8 player-wrap">
+
+      <div class="flex items-center gap-5 mb-2">
+        <button class="play-btn" id="playBtn" onclick="togglePlay()">
+          <!-- Play icon -->
+          <svg id="iconPlay" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="6,4 20,12 6,20" fill="rgba(255,255,255,0.8)"/>
+          </svg>
+          <!-- Pause icon -->
+          <svg id="iconPause" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+            <rect x="5" y="4" width="4" height="16" fill="rgba(255,255,255,0.8)"/>
+            <rect x="15" y="4" width="4" height="16" fill="rgba(255,255,255,0.8)"/>
+          </svg>
+        </button>
+
+        <div>
+          <div class="font-display text-lg font-light tracking-widest text-white/80" id="songTitle">— — —</div>
+          <div class="font-mono text-[10px] tracking-[3px] text-white/25 mt-1" id="songArtist">AUDIO SIGNAL</div>
+        </div>
+      </div>
+
+      <div class="waveform mt-5" id="waveform">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="progress-bar" id="progressBar" onclick="seek(event)">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="flex justify-between font-mono text-[10px] text-white/20">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+      </div>
+
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-white/5 flex items-center justify-between">
+      <span class="font-mono text-[9px] tracking-[3px] text-white/15">SYS.SECURE</span>
+      <span class="font-mono text-[9px] tracking-[3px] text-white/15">V.01</span>
+    </div>
+
+  </div>
+</div>
+
+<audio id="audioPlayer" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+<script>
+const correctPin = "5395";
+
+function unlock(){
+  const input = document.getElementById("pinInput").value;
+  const error = document.getElementById("error");
+  const glitch = document.getElementById("glitch");
+
+  if(input === correctPin){
+    glitch.classList.add("show-glitch");
+    setTimeout(()=>{
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("archive").classList.remove("hidden");
+    }, 400);
+  } else {
+    error.innerText = "ACCESS DENIED";
+    document.getElementById("pinInput").value = "";
+    setTimeout(()=>{ error.innerText = ""; }, 2000);
+  }
+}
+
+document.getElementById("pinInput").addEventListener("keydown", function(e){
+  if(e.key === "Enter") unlock();
+});
+
+// Audio player
+const audio = document.getElementById("audioPlayer");
+const playBtn = document.getElementById("playBtn");
+const iconPlay = document.getElementById("iconPlay");
+const iconPause = document.getElementById("iconPause");
+const progressFill = document.getElementById("progressFill");
+const currentTimeEl = document.getElementById("currentTime");
+const totalTimeEl = document.getElementById("totalTime");
+const waveform = document.getElementById("waveform");
+
+audio.addEventListener("loadedmetadata", ()=>{
+  totalTimeEl.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener("timeupdate", ()=>{
+  const pct = (audio.currentTime / audio.duration) * 100;
+  progressFill.style.width = pct + "%";
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+
+audio.addEventListener("ended", ()=>{
+  iconPlay.style.display = "block";
+  iconPause.style.display = "none";
+  waveform.classList.remove("playing");
+});
+
+function togglePlay(){
+  if(audio.paused){
+    audio.play();
+    iconPlay.style.display = "none";
+    iconPause.style.display = "block";
+    waveform.classList.add("playing");
+  } else {
+    audio.pause();
+    iconPlay.style.display = "block";
+    iconPause.style.display = "none";
+    waveform.classList.remove("playing");
+  }
+}
+
+function seek(e){
+  const bar = document.getElementById("progressBar");
+  const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+}
+
+function formatTime(s){
+  if(isNaN(s)) return "0:00";
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ":" + (sec < 10 ? "0" : "") + sec;
+}
+</script>
+
+</body>
+</html>
