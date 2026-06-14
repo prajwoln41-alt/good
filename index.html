@@ -6,7 +6,7 @@
 <title>ACCESS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Serif+Display:ital@0;1&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -15,6 +15,7 @@
         fontFamily: {
           'display': ['Cormorant Garamond', 'serif'],
           'mono': ['Space Mono', 'monospace'],
+          'hand': ['Caveat', 'cursive'],
         },
         animation: {
           'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
@@ -438,6 +439,15 @@
     background: radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.04) 0%, transparent 70%);
     pointer-events: none;
   }
+  .card-back-img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 4px;
+    border: 1px solid rgba(255,255,255,0.15);
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.3));
+  }
   .card-back-icon {
     font-size: 36px;
     margin-bottom: 4px;
@@ -476,23 +486,37 @@
   /* ── CONFIRMATION SCREEN ── */
   #confirmScreen {
     background: #000;
+    overflow: auto;
+  }
+  .confirm-inner {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    padding: 20px;
   }
   .confirm-icon {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 32px;
+    margin: 0 auto 24px;
     opacity: 0;
     transform: scale(0.8);
     transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16,1,0.3,1);
+    overflow: hidden;
   }
   .confirm-icon.visible {
     opacity: 1;
     transform: scale(1);
+  }
+  .confirm-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
   }
   .confirm-icon-glyph {
     font-size: 22px;
@@ -511,12 +535,12 @@
   .confirm-text {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
-    font-size: clamp(28px, 6vw, 42px);
+    font-size: clamp(24px, 5vw, 36px);
     letter-spacing: 2px;
     line-height: 1.5;
     text-align: center;
     color: rgba(255,255,255,0.92);
-    margin: 22px 0 28px;
+    margin: 18px 0 20px;
     opacity: 0;
     transform: translateY(14px);
     transition: opacity 1s ease 0.4s, transform 1s cubic-bezier(0.16,1,0.3,1) 0.4s;
@@ -529,6 +553,88 @@
     font-style: italic;
     color: rgba(255,255,255,1);
   }
+  /* ── ALL GIFTS REVEAL ── */
+  .confirm-all-gifts {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 20px 0;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+  .confirm-all-gifts.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .mini-gift {
+    flex: 1;
+    max-width: 130px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 14px 8px 12px;
+    background: rgba(255,255,255,0.03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mini-gift.chosen {
+    border-color: rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.06);
+  }
+  .mini-gift.chosen::after {
+    content: 'CHOSEN';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+  }
+  .mini-gift-img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .mini-gift-icon {
+    font-size: 32px;
+    line-height: 1;
+  }
+  .mini-gift-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+  }
+  .mini-gift-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+    text-align: center;
+    line-height: 1.5;
+  }
+  /* ── NEPALI LINE ── */
+  .confirm-nepali {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(14px, 3.5vw, 18px);
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+    margin: 8px 0 16px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    line-height: 1.6;
+  }
+  .confirm-nepali.visible { opacity: 1; }
   .confirm-divider {
     width: 0;
     height: 1px;
@@ -543,13 +649,362 @@
     letter-spacing: 4px;
     color: rgba(255,255,255,0.2);
     text-align: center;
-    margin-top: 24px;
+    margin-top: 20px;
     opacity: 0;
     transition: opacity 0.8s ease 1.3s;
   }
   .confirm-sub.visible { opacity: 1; }
 
-  /* ── CHAOS TRANSITION OVERLAY ── */
+  /* ── ELEGANT FADE TRANSITION ── */
+  #fadeOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    pointer-events: none;
+    background: #000;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.6s ease-in-out;
+  }
+  #fadeOverlay.fade-in {
+    opacity: 1;
+  }
+
+  /* ── LETTER SCREEN ── */
+  #letterScreen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 40px 20px 80px;
+    z-index: 8000;
+    background: #f5f0e8;
+    background-image:
+      radial-gradient(ellipse at 30% 0%, rgba(210,180,140,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 100%, rgba(180,160,120,0.2) 0%, transparent 60%);
+  }
+  /* wrapper to stack seal + paper vertically, centered */
+  #letterInner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  /* ── WAX SEAL ── */
+  .wax-seal-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .wax-seal-wrap.visible { opacity: 1; }
+  .wax-seal {
+    width: 72px;
+    height: 72px;
+    position: relative;
+    cursor: default;
+  }
+  .wax-seal svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 16px rgba(180,40,40,0.4));
+    transform-origin: center;
+    transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.6s ease;
+  }
+  .wax-seal.cracked svg {
+    transform: scale(1.15) rotate(8deg);
+    opacity: 0;
+  }
+  .seal-crack-line {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .seal-crack-line svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s;
+  }
+  .wax-seal.cracked .seal-crack-line svg { opacity: 1; }
+
+  /* ── PAPER ── */
+  .letter-paper {
+    width: 100%;
+    max-width: 480px;
+    background: #faf6ed;
+    border-radius: 4px;
+    padding: 52px 48px 48px;
+    position: relative;
+    box-shadow:
+      0 2px 0 #e8e0cc,
+      0 4px 0 #ddd4b8,
+      0 8px 32px rgba(100,80,40,0.15),
+      0 24px 64px rgba(100,80,40,0.08);
+    opacity: 0;
+    transform: translateY(24px) rotate(-0.5deg);
+    transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
+    margin: 0 auto;
+  }
+  .letter-paper.visible {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  /* paper texture lines */
+  .letter-paper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent 31px,
+      rgba(180,160,120,0.12) 31px,
+      rgba(180,160,120,0.12) 32px
+    );
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  /* left margin line */
+  .letter-paper::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 44px;
+    width: 1px;
+    background: rgba(200,150,150,0.2);
+    pointer-events: none;
+  }
+  .letter-date {
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    color: rgba(100,70,40,0.5);
+    text-align: right;
+    margin-bottom: 32px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .letter-date.visible { opacity: 1; }
+  .letter-salutation {
+    font-family: 'Caveat', cursive;
+    font-size: 26px;
+    font-weight: 600;
+    color: #5c3d1e;
+    margin-bottom: 20px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .letter-salutation.visible { opacity: 1; }
+  .letter-body {
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    line-height: 2;
+    color: #4a3520;
+    min-height: 120px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .letter-body .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 22px;
+    background: #5c3d1e;
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 0.8s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .letter-sign {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    color: #5c3d1e;
+    text-align: right;
+    margin-top: 28px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .letter-sign.visible { opacity: 1; }
+
+  /* ── EASTER EGG TRIGGER ── */
+  .easter-trigger {
+    display: block;
+    text-align: center;
+    margin-top: 32px;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: rgba(92,61,30,0.12);
+    cursor: pointer;
+    user-select: none;
+    opacity: 0;
+    transition: opacity 1.2s ease, color 0.4s ease;
+    animation: easterPulse 3.5s ease-in-out infinite;
+    letter-spacing: 2px;
+  }
+  .easter-trigger.visible { opacity: 1; }
+  .easter-trigger:hover { color: rgba(92,61,30,0.35); }
+  @keyframes easterPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* ── EASTER EGG MODAL ── */
+  #easterModal {
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.82);
+    backdrop-filter: blur(6px);
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  #easterModal.visible { opacity: 1; }
+  .easter-modal-inner {
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(4,4,4,0.97);
+    padding: 40px 32px 36px;
+    text-align: center;
+    position: relative;
+  }
+  .easter-modal-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 5px;
+    color: rgba(255,255,255,0.2);
+    margin-bottom: 24px;
+  }
+  .easter-modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 6px;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 28px;
+  }
+  #easterInput {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    width: 80px;
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 32px;
+    letter-spacing: 12px;
+    text-align: center;
+    outline: none;
+    padding: 10px 0;
+    transition: border-color 0.3s ease;
+    caret-color: rgba(255,255,255,0.4);
+    display: block;
+    margin: 0 auto 24px;
+  }
+  #easterInput:focus { border-bottom-color: rgba(255,255,255,0.5); }
+  .easter-modal-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.6);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    padding: 12px 0;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .easter-modal-btn:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.4);
+    color: #fff;
+  }
+  .easter-modal-error {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,60,60,0.8);
+    margin-top: 16px;
+    min-height: 16px;
+    transition: opacity 0.3s ease;
+  }
+  @keyframes easterShake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+  }
+  .easter-shake { animation: easterShake 0.4s ease; }
+
+  /* ── I LOVE YOU SCREEN ── */
+  #ilyScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 9200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    flex-direction: column;
+    gap: 0;
+  }
+  .ily-word {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(64px, 16vw, 140px);
+    letter-spacing: 12px;
+    color: rgba(255,255,255,0.93);
+    line-height: 1.1;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 1.1s cubic-bezier(0.16,1,0.3,1), transform 1.1s cubic-bezier(0.16,1,0.3,1);
+    text-align: center;
+  }
+  .ily-word.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── FLOATING PETALS (letter bg) ── */
+  .petal-letter {
+    position: fixed;
+    pointer-events: none;
+    font-size: 18px;
+    opacity: 0;
+    z-index: 8001;
+    animation: petalFall var(--dur) var(--delay) ease-in forwards;
+  }
+  @keyframes petalFall {
+    0%   { opacity: 0; transform: translateY(-20px) rotate(0deg) translateX(0); }
+    10%  { opacity: 0.5; }
+    90%  { opacity: 0.3; }
+    100% { opacity: 0; transform: translateY(110vh) rotate(var(--rot)) translateX(var(--sway)); }
+  }
+
+  /* ── PARTICLE / FLOATUP ── */
+  @keyframes floatUp {
+    0%   { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-80px) scale(1.4); opacity: 0; }
+  }
+  .particle {
+    position: absolute;
+    pointer-events: none;
+    font-size: 18px;
+    animation: floatUp 1.4s ease forwards;
+  }
+
+  /* ── CHAOS TRANSITION OVERLAY (kept for reference, unused now) ── */
   #chaosOverlay {
     position: fixed;
     inset: 0;
@@ -557,20 +1012,13 @@
     pointer-events: none;
     display: none;
     overflow: hidden;
-    background: #000;
+    background: transparent;
   }
   #chaosCanvas {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-  }
-  .chaos-glitch-band {
-    position: absolute;
-    left: 0;
-    right: 0;
-    pointer-events: none;
-    mix-blend-mode: screen;
   }
   @keyframes glitchBand {
     0%   { transform: translateX(0) scaleX(1); opacity: 0; }
@@ -646,248 +1094,6 @@
     70% { transform: translate(-12px, -2px); }
     80% { transform: translate(6px, 10px); }
     90% { transform: translate(-8px, -4px); }
-  }
-
-  /* ── CUTE FINAL SCREEN ── */
-  #cuteScreen {
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    overflow: auto;
-    padding: 40px 20px;
-    z-index: 8000;
-    background: transparent;
-  }
-  #cuteScreen::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 20% 20%, rgba(255, 182, 193, 0.55) 0%, transparent 55%),
-      radial-gradient(ellipse at 80% 10%, rgba(216, 191, 255, 0.45) 0%, transparent 50%),
-      radial-gradient(ellipse at 60% 80%, rgba(255, 218, 185, 0.45) 0%, transparent 55%),
-      radial-gradient(ellipse at 10% 80%, rgba(176, 224, 230, 0.35) 0%, transparent 50%),
-      linear-gradient(160deg, #fff5f8 0%, #fdf0ff 40%, #fff8f0 70%, #f0f8ff 100%);
-    z-index: -1;
-  }
-
-  /* ── CUTE CARD — redesigned ── */
-  .cute-card {
-    position: relative;
-    width: 100%;
-    max-width: 460px;
-    background: rgba(255,255,255,0.72);
-    border: 1px solid rgba(255,255,255,0.95);
-    border-radius: 28px;
-    backdrop-filter: blur(32px);
-    padding: 56px 52px 48px;
-    text-align: center;
-    box-shadow:
-      0 0 0 1px rgba(220,170,200,0.12),
-      0 32px 100px rgba(180,120,180,0.18),
-      0 8px 32px rgba(200,140,200,0.12),
-      inset 0 1px 0 rgba(255,255,255,0.9);
-    opacity: 0;
-    transform: scale(0.92) translateY(20px);
-    transition: opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.2s cubic-bezier(0.16,1,0.3,1);
-  }
-  .cute-card.visible {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  /* Subtle inner shimmer line at top */
-  .cute-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 10%; right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(220,170,210,0.6), transparent);
-    border-radius: 50%;
-  }
-
-  /* Floating petals */
-  .petal {
-    position: fixed;
-    pointer-events: none;
-    font-size: 18px;
-    opacity: 0;
-    z-index: 8001;
-    animation: petalFall var(--dur) var(--delay) ease-in forwards;
-  }
-  @keyframes petalFall {
-    0%   { opacity: 0; transform: translateY(-20px) rotate(0deg) translateX(0); }
-    10%  { opacity: 0.7; }
-    90%  { opacity: 0.5; }
-    100% { opacity: 0; transform: translateY(110vh) rotate(var(--rot)) translateX(var(--sway)); }
-  }
-
-  /* Top monogram / date stamp */
-  .cute-stamp {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 28px;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .cute-stamp.visible { opacity: 1; transform: translateY(0); }
-  .cute-stamp-line {
-    width: 28px;
-    height: 1px;
-    background: rgba(180,110,150,0.3);
-  }
-  .cute-stamp-text {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 5px;
-    color: rgba(160,90,130,0.5);
-  }
-
-  /* Big name — revised typography */
-  .cute-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(64px, 17vw, 96px);
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    line-height: 0.95;
-    color: transparent;
-    background: linear-gradient(145deg, #b5507a 0%, #8b52b8 45%, #c06090 80%, #b5507a 100%);
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: nameShimmer 6s linear infinite;
-    margin-bottom: 4px;
-    opacity: 0;
-    transform: translateY(20px) scale(0.96);
-    transition: opacity 1s ease 0.2s, transform 1s cubic-bezier(0.16,1,0.3,1) 0.2s;
-  }
-  .cute-name.visible { opacity: 1; transform: translateY(0) scale(1); }
-  @keyframes nameShimmer {
-    0%   { background-position: 0% center; }
-    100% { background-position: 300% center; }
-  }
-
-  /* Age as a typographic accent, not a badge */
-  .cute-age-line {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 17px;
-    letter-spacing: 3px;
-    color: rgba(160, 90, 130, 0.45);
-    margin-bottom: 28px;
-    opacity: 0;
-    transition: opacity 0.8s ease 0.5s;
-  }
-  .cute-age-line.visible { opacity: 1; }
-
-  /* Divider */
-  .cute-divider {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    justify-content: center;
-    margin: 0 0 28px;
-    opacity: 0;
-    transition: opacity 0.8s ease 0.7s;
-  }
-  .cute-divider.visible { opacity: 1; }
-  .cute-divider-line {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(180,110,160,0.25), transparent);
-    flex: 1;
-    max-width: 72px;
-  }
-  .cute-divider-icon {
-    font-size: 12px;
-    color: rgba(180,110,160,0.35);
-    font-family: 'Space Mono', monospace;
-  }
-
-  /* Message body — cleaner, more editorial */
-  .cute-message {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(17px, 4.5vw, 21px);
-    font-weight: 300;
-    line-height: 1.85;
-    color: rgba(60, 30, 60, 0.68);
-    margin-bottom: 32px;
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 1s ease 0.9s, transform 1s ease 0.9s;
-    letter-spacing: 0.02em;
-  }
-  .cute-message.visible { opacity: 1; transform: translateY(0); }
-  .cute-message em {
-    font-style: italic;
-    color: rgba(140, 60, 110, 0.75);
-  }
-
-  /* Bottom area */
-  .cute-bottom {
-    border-top: 1px solid rgba(200,150,190,0.15);
-    padding-top: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    opacity: 0;
-    transition: opacity 0.8s ease 1.6s;
-  }
-  .cute-bottom.visible { opacity: 1; }
-  .cute-from {
-    font-family: 'DM Serif Display', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: rgba(150,90,130,0.5);
-  }
-  .cute-date {
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: rgba(160,100,140,0.3);
-  }
-
-  /* Corner decorations */
-  .cute-corner {
-    position: absolute;
-    font-size: 18px;
-    opacity: 0;
-    transition: opacity 0.6s ease;
-  }
-  .cute-corner.visible { opacity: 0.28; }
-  .cute-corner-tl { top: 18px; left: 22px; transform: rotate(-20deg); }
-  .cute-corner-tr { top: 18px; right: 22px; transform: rotate(20deg); }
-  .cute-corner-bl { bottom: 18px; left: 22px; transform: rotate(10deg); }
-  .cute-corner-br { bottom: 18px; right: 22px; transform: rotate(-10deg); }
-
-  /* Floating hearts */
-  @keyframes floatHeart {
-    0%   { transform: translateY(0) scale(1); opacity: 0.5; }
-    50%  { transform: translateY(-16px) scale(1.12); opacity: 0.85; }
-    100% { transform: translateY(0) scale(1); opacity: 0.5; }
-  }
-  .float-heart {
-    position: fixed;
-    font-size: 15px;
-    animation: floatHeart var(--dur) var(--delay) ease-in-out infinite;
-    opacity: 0;
-    transition: opacity 0.6s ease;
-  }
-  .float-heart.visible { opacity: 0.5; }
-
-  /* ── PARTICLE / FLOATUP ── */
-  @keyframes floatUp {
-    0%   { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-80px) scale(1.4); opacity: 0; }
-  }
-  .particle {
-    position: absolute;
-    pointer-events: none;
-    font-size: 18px;
-    animation: floatUp 1.4s ease forwards;
   }
 </style>
 </head>
@@ -1060,7 +1266,8 @@
           </div>
           <div class="gift-card-face gift-card-back">
             <div class="card-back-shine"></div>
-            <div class="card-back-icon">🪬</div>
+            <img class="card-back-img" src="https://m.media-amazon.com/images/I/61FBpqX-lLL._AC_UY1000_.jpg" alt="Pauju anklet" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="card-back-icon" style="display:none">✦</div>
             <div class="card-back-name">PAUJU</div>
             <div class="card-back-sub">ANKLET · FOR YOU</div>
           </div>
@@ -1079,7 +1286,8 @@
           </div>
           <div class="gift-card-face gift-card-back">
             <div class="card-back-shine"></div>
-            <div class="card-back-icon">🪬</div>
+            <img class="card-back-img" src="https://m.media-amazon.com/images/I/61FBpqX-lLL._AC_UY1000_.jpg" alt="Pauju anklet" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="card-back-icon" style="display:none">✦</div>
             <div class="card-back-name">PAUJU</div>
             <div class="card-back-sub">ANKLET · FOR YOU</div>
           </div>
@@ -1098,7 +1306,8 @@
           </div>
           <div class="gift-card-face gift-card-back">
             <div class="card-back-shine"></div>
-            <div class="card-back-icon">🪬</div>
+            <img class="card-back-img" src="https://m.media-amazon.com/images/I/61FBpqX-lLL._AC_UY1000_.jpg" alt="Pauju anklet" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="card-back-icon" style="display:none">✦</div>
             <div class="card-back-name">PAUJU</div>
             <div class="card-back-sub">ANKLET · FOR YOU</div>
           </div>
@@ -1115,64 +1324,106 @@
 
 <!-- CONFIRMATION SCREEN -->
 <div class="archive-screen hidden" id="confirmScreen">
-  <div class="w-full max-w-sm text-center">
+  <div class="confirm-inner">
     <div class="confirm-icon" id="confirmIcon">
-      <span class="confirm-icon-glyph">🪬</span>
+      <img class="confirm-icon-img" src="https://m.media-amazon.com/images/I/61FBpqX-lLL._AC_UY1000_.jpg" alt="Pauju" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <span class="confirm-icon-glyph" style="display:none">✦</span>
     </div>
     <div class="confirm-eyebrow" id="confirmEyebrow">CONFIRMED</div>
     <div class="confirm-text" id="confirmText">
-      I will gift you<br>this <span class="accent">Pauju</span>
+      I will gift you this <span class="accent">Pauju</span>
     </div>
+
+    <!-- All 3 gifts revealed -->
+    <div class="confirm-all-gifts" id="confirmAllGifts">
+      <div class="mini-gift chosen">
+        <img class="mini-gift-img" src="https://m.media-amazon.com/images/I/61FBpqX-lLL._AC_UY1000_.jpg" alt="Pauju" onerror="this.style.display='none'">
+        <div class="mini-gift-name">PAUJU</div>
+        <div class="mini-gift-sub">ANKLET</div>
+      </div>
+      <div class="mini-gift">
+        <img class="mini-gift-img" src="https://m.media-amazon.com/images/I/61FBpqX-lLL._AC_UY1000_.jpg" alt="Pauju" onerror="this.style.display='none'">
+        <div class="mini-gift-name">PAUJU</div>
+        <div class="mini-gift-sub">ANKLET</div>
+      </div>
+      <div class="mini-gift">
+        <img class="mini-gift-img" src="https://m.media-amazon.com/images/I/61FBpqX-lLL._AC_UY1000_.jpg" alt="Pauju" onerror="this.style.display='none'">
+        <div class="mini-gift-name">PAUJU</div>
+        <div class="mini-gift-sub">ANKLET</div>
+      </div>
+    </div>
+
+    <div class="confirm-nepali" id="confirmNepali">
+      jun click garda ni pauju nei aauthyo hehe 
+    </div>
+
     <div class="confirm-divider" id="confirmDivider"></div>
-    <div class="confirm-sub" id="confirmSub">PREPARING SOMETHING ELSE</div>
+    <div class="confirm-sub" id="confirmSub">PREPARING SOMETHING SPECIAL</div>
   </div>
 </div>
+
+<!-- ELEGANT FADE TRANSITION OVERLAY -->
+<div id="fadeOverlay"></div>
 
 <!-- CHAOS TRANSITION OVERLAY -->
 <div id="chaosOverlay">
   <canvas id="chaosCanvas"></canvas>
 </div>
 
-<!-- CUTE FINAL SCREEN -->
-<div id="cuteScreen">
-  <div id="floatingHearts"></div>
+<!-- ══════════════════════════════════════════
+     LETTER SCREEN — The real finale
+     ══════════════════════════════════════════ -->
+<div id="letterScreen">
+  <div id="letterInner">
 
-  <div class="cute-card" id="cuteCard">
-    <div class="cute-corner cute-corner-tl">🌸</div>
-    <div class="cute-corner cute-corner-tr">🌷</div>
-    <div class="cute-corner cute-corner-bl">🌼</div>
-    <div class="cute-corner cute-corner-br">✿</div>
-
-    <div class="cute-stamp" id="cuteStamp">
-      <div class="cute-stamp-line"></div>
-      <div class="cute-stamp-text">HAPPY BIRTHDAY</div>
-      <div class="cute-stamp-line"></div>
+    <!-- WAX SEAL -->
+    <div class="wax-seal-wrap" id="waxSealWrap">
+      <div class="wax-seal" id="waxSeal">
+        <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="36" cy="36" r="34" fill="#8b1a1a" stroke="#6b1010" stroke-width="1"/>
+          <circle cx="36" cy="36" r="28" fill="none" stroke="#c0392b" stroke-width="0.5" stroke-dasharray="3 4"/>
+          <text x="36" y="32" text-anchor="middle" font-family="serif" font-size="9" fill="rgba(255,220,200,0.7)" letter-spacing="3">FOR</text>
+          <text x="36" y="44" text-anchor="middle" font-family="serif" font-size="9" fill="rgba(255,220,200,0.7)" letter-spacing="3">RIYA</text>
+          <polygon points="36,14 38,22 46,22 40,27 42,35 36,30 30,35 32,27 26,22 34,22" fill="rgba(255,200,180,0.25)"/>
+        </svg>
+        <div class="seal-crack-line">
+          <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <path d="M36 4 L40 18 L52 22 L38 30 L44 48 L36 38 L28 50 L32 30 L18 22 L32 18 Z" fill="none" stroke="rgba(255,200,180,0.6)" stroke-width="0.8"/>
+            <line x1="36" y1="4" x2="52" y2="68" stroke="rgba(255,180,160,0.4)" stroke-width="0.5"/>
+            <line x1="20" y1="8" x2="58" y2="64" stroke="rgba(255,180,160,0.3)" stroke-width="0.5"/>
+          </svg>
+        </div>
+      </div>
     </div>
 
-    <div class="cute-name" id="cuteName">RIYA</div>
-
-    <div class="cute-age-line" id="cuteAgeLine">turning twenty-one</div>
-
-    <div class="cute-divider" id="cuteDivider">
-      <div class="cute-divider-line"></div>
-      <div class="cute-divider-icon">✦</div>
-      <div class="cute-divider-line"></div>
+    <!-- PAPER LETTER -->
+    <div class="letter-paper" id="letterPaper">
+      <div class="letter-date" id="letterDate">June 14, 2026</div>
+      <div class="letter-salutation" id="letterSal">Dear Riya,</div>
+      <div class="letter-body" id="letterBody"><span class="cursor"></span></div>
+      <div class="letter-sign" id="letterSign">— with love 🌸</div>
+      <span class="easter-trigger" id="easterTrigger" onclick="openEasterModal()">✦</span>
     </div>
 
-    <p class="cute-message" id="cuteMessage">
-      you made it through every lock,<br>
-      every puzzle, every riddle —<br>
-      because that's just who you are.<br><br>
-      <em>someone who figures it out.</em><br>
-      someone worth celebrating.<br>
-      today, and every day.
-    </p>
-
-    <div class="cute-bottom" id="cuteBottom">
-      <div class="cute-from">— with love</div>
-      <div class="cute-date">JUNE · 2026</div>
-    </div>
   </div>
+</div><!-- end letterScreen -->
+
+<!-- EASTER EGG MODAL -->
+<div id="easterModal" onclick="handleModalBackdropClick(event)">
+  <div class="easter-modal-inner" id="easterModalInner">
+    <div class="easter-modal-eyebrow">ONE MORE DOOR</div>
+    <div class="easter-modal-title">ENTER</div>
+    <input type="number" id="easterInput" maxlength="1" min="0" max="9" placeholder="·" />
+    <button class="easter-modal-btn" onclick="checkEaster()">UNLOCK</button>
+    <div class="easter-modal-error" id="easterError"></div>
+  </div>
+</div>
+
+<!-- I LOVE YOU SCREEN -->
+<div id="ilyScreen">
+  <div class="ily-word" id="ilyW1">I</div>
+  <div class="ily-word" id="ilyW2">LOVE</div>
+  <div class="ily-word" id="ilyW3">YOU</div>
 </div>
 
 <audio id="audioPlayer" src="song.mp3"></audio>
@@ -1343,468 +1594,199 @@ function showConfirmation(){
   }, 550);
 
   setTimeout(()=>{
-    document.getElementById('confirmDivider').classList.add('visible');
+    document.getElementById('confirmAllGifts').classList.add('visible');
   }, 1050);
 
   setTimeout(()=>{
-    document.getElementById('confirmSub').classList.add('visible');
+    document.getElementById('confirmNepali').classList.add('visible');
   }, 1700);
 
   setTimeout(()=>{
-    triggerChaosTransition();
-  }, 3000);
+    document.getElementById('confirmDivider').classList.add('visible');
+  }, 2100);
+
+  setTimeout(()=>{
+    document.getElementById('confirmSub').classList.add('visible');
+  }, 2500);
+
+  setTimeout(()=>{
+    triggerElegantFade();
+  }, 4400);
 }
 
-// ── CHAOS TRANSITION ──
-function triggerChaosTransition(){
-  const overlay = document.getElementById('chaosOverlay');
-  const canvas = document.getElementById('chaosCanvas');
+// ── ELEGANT FADE TRANSITION ──
+function triggerElegantFade(){
+  const overlay = document.getElementById('fadeOverlay');
   overlay.style.display = 'block';
 
-  const W = window.innerWidth;
-  const H = window.innerHeight;
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext('2d');
+  // Trigger reflow so transition fires
+  void overlay.offsetWidth;
 
-  // Particles array
-  const particles = [];
-  const shards = [];
-  const smokeParticles = [];
-  const glitchBands = [];
-  const explosions = [];
+  // Fade to black over 600ms
+  overlay.classList.add('fade-in');
 
-  let t = 0;
-  let phase = 0; // 0=buildup 1=explosion 2=chaos 3=fadeout
-  let phaseTimer = 0;
-  let screenShakeX = 0, screenShakeY = 0;
-  let bgAlpha = 1;
-  let whiteFlashAlpha = 0;
-  let finalWhite = 0;
+  setTimeout(()=>{
+    // Hide confirm screen while black
+    document.getElementById('confirmScreen').classList.add('hidden');
 
-  // Spawn initial particles
-  function spawnSparks(cx, cy, count, speed, color) {
-    for(let i = 0; i < count; i++){
-      const angle = Math.random() * Math.PI * 2;
-      const spd = speed * (0.4 + Math.random() * 0.8);
-      particles.push({
-        x: cx, y: cy,
-        vx: Math.cos(angle) * spd,
-        vy: Math.sin(angle) * spd,
-        life: 1,
-        decay: 0.012 + Math.random() * 0.022,
-        size: 1.5 + Math.random() * 3,
-        color: color || `hsl(${Math.random()*60+10},100%,65%)`,
-        tail: [],
-        gravity: 0.12,
-        type: 'spark'
-      });
-    }
-  }
+    // Show letter screen underneath
+    document.getElementById('letterScreen').style.display = 'flex';
 
-  function spawnShards(cx, cy, count) {
-    for(let i = 0; i < count; i++){
-      const angle = Math.random() * Math.PI * 2;
-      const spd = 4 + Math.random() * 14;
-      shards.push({
-        x: cx, y: cy,
-        vx: Math.cos(angle) * spd,
-        vy: Math.sin(angle) * spd - 2,
-        rot: Math.random() * Math.PI * 2,
-        rotV: (Math.random()-0.5) * 0.4,
-        w: 4 + Math.random() * 16,
-        h: 2 + Math.random() * 8,
-        life: 1,
-        decay: 0.008 + Math.random() * 0.016,
-        gravity: 0.18,
-        color: Math.random() > 0.5 ? `hsl(${Math.random()*40+5},100%,60%)` : `hsl(${Math.random()*20+200},80%,80%)`
-      });
-    }
-  }
+    // Hold black for 200ms then fade out overlay
+    setTimeout(()=>{
+      overlay.classList.remove('fade-in');
+      overlay.style.transition = 'opacity 0.8s ease-in-out';
 
-  function spawnSmoke(cx, cy, count) {
-    for(let i = 0; i < count; i++){
-      smokeParticles.push({
-        x: cx + (Math.random()-0.5)*60,
-        y: cy + (Math.random()-0.5)*30,
-        vx: (Math.random()-0.5) * 1.2,
-        vy: -(0.8 + Math.random() * 1.8),
-        size: 20 + Math.random() * 60,
-        life: 0.6 + Math.random() * 0.4,
-        decay: 0.005 + Math.random() * 0.008,
-        gray: Math.floor(Math.random()*60 + 40)
-      });
-    }
-  }
-
-  function spawnExplosion(cx, cy, radius) {
-    explosions.push({ x: cx, y: cy, r: 0, maxR: radius, life: 1, decay: 0.04, rings: Math.floor(2+Math.random()*3) });
-  }
-
-  function spawnGlitchBand() {
-    glitchBands.push({
-      y: Math.random() * H,
-      h: 2 + Math.random() * 40,
-      life: 1,
-      decay: 0.06 + Math.random() * 0.12,
-      offsetX: (Math.random()-0.5) * 80,
-      color: Math.random() > 0.5 ?
-        `rgba(255,${Math.floor(Math.random()*80)},${Math.floor(Math.random()*80)},` :
-        `rgba(${Math.floor(Math.random()*80)},${Math.floor(Math.random()*80)},255,`
-    });
-  }
-
-  const glitchTexts = ['SYSTEM FAILURE','ERR 0x4FF2','CORE DUMP','STACK OVERFLOW','SEGFAULT','NULL PTR','MEMORY CORRUPT','//OVERRIDE','KERNEL PANIC','0xDEADBEEF'];
-  const activeTexts = [];
-  function spawnGlitchText() {
-    activeTexts.push({
-      text: glitchTexts[Math.floor(Math.random()*glitchTexts.length)],
-      x: Math.random() * W,
-      y: Math.random() * H,
-      size: 8 + Math.random() * 18,
-      life: 1,
-      decay: 0.04 + Math.random() * 0.06,
-      color: Math.random() > 0.5 ? `#ff${Math.floor(Math.random()*99).toString(16).padStart(2,'0')}44` : `#44${Math.floor(Math.random()*99).toString(16).padStart(2,'0')}ff`,
-      offsetX: (Math.random()-0.5)*30
-    });
-  }
-
-  // Scanline array for chaos
-  const scanLines = [];
-  function spawnScanLines(count) {
-    for(let i=0; i<count; i++){
-      scanLines.push({
-        y: Math.random()*H,
-        h: 1+Math.random()*3,
-        speed: 2+Math.random()*8,
-        life: 0.5+Math.random()*0.5,
-        decay: 0.008
-      });
-    }
-  }
-
-  let animId;
-  const startTime = performance.now();
-
-  function draw(now) {
-    animId = requestAnimationFrame(draw);
-    const dt = Math.min((now - (draw.last||now)) / 16.67, 3);
-    draw.last = now;
-    t = (now - startTime) / 1000;
-
-    ctx.clearRect(0, 0, W, H);
-
-    // Background
-    ctx.fillStyle = `rgba(0,0,0,${bgAlpha})`;
-    ctx.fillRect(0, 0, W, H);
-
-    // Apply screen shake
-    ctx.save();
-    ctx.translate(screenShakeX, screenShakeY);
-
-    // Phase logic
-    if(phase === 0 && t < 0.6) {
-      // Buildup — sparse glitch bands, scanlines
-      if(Math.random() < 0.3) spawnGlitchBand();
-      if(Math.random() < 0.2) spawnGlitchText();
-      screenShakeX = (Math.random()-0.5)*2;
-      screenShakeY = (Math.random()-0.5)*2;
-    } else if(phase === 0) {
-      phase = 1;
-    }
-
-    if(phase === 1) {
-      // Main explosion — multiple blasts
-      for(let i=0;i<3;i++){
-        const cx = W*0.2 + Math.random()*W*0.6;
-        const cy = H*0.2 + Math.random()*H*0.6;
-        spawnExplosion(cx, cy, 60+Math.random()*120);
-        spawnSparks(cx, cy, 30, 8+Math.random()*6);
-        spawnShards(cx, cy, 15);
-        spawnSmoke(cx, cy, 8);
-      }
-      spawnGlitchBand(); spawnGlitchBand(); spawnGlitchBand();
-      spawnGlitchText(); spawnGlitchText();
-      spawnScanLines(6);
-      screenShakeX = (Math.random()-0.5)*24;
-      screenShakeY = (Math.random()-0.5)*24;
-      whiteFlashAlpha = 0.7;
-      phase = 2;
-    }
-
-    if(phase === 2) {
-      // Chaos — continuous spawning
-      if(Math.random()<0.4) spawnSparks(Math.random()*W, Math.random()*H*0.8, 8, 5+Math.random()*5);
-      if(Math.random()<0.25) spawnShards(Math.random()*W, Math.random()*H, 6);
-      if(Math.random()<0.18) spawnSmoke(Math.random()*W, H*0.5+Math.random()*H*0.5, 4);
-      if(Math.random()<0.5) spawnGlitchBand();
-      if(Math.random()<0.3) spawnGlitchText();
-      if(Math.random()<0.15) spawnExplosion(Math.random()*W, Math.random()*H, 30+Math.random()*80);
-      if(Math.random()<0.1) spawnScanLines(3);
-      screenShakeX = (Math.random()-0.5)*(14*(1-Math.max(0,t-1.2)));
-      screenShakeY = (Math.random()-0.5)*(14*(1-Math.max(0,t-1.2)));
-      if(whiteFlashAlpha > 0) whiteFlashAlpha = Math.max(0, whiteFlashAlpha - 0.04*dt);
-      if(t > 3.2) { phase = 3; }
-    }
-
-    if(phase === 3) {
-      // Fade out — last particles die, white takes over
-      screenShakeX *= 0.85;
-      screenShakeY *= 0.85;
-      finalWhite = Math.min(1, finalWhite + 0.018*dt);
-      if(finalWhite > 0.95) {
-        cancelAnimationFrame(animId);
-        ctx.restore();
-        document.getElementById('confirmScreen').classList.add('hidden');
+      setTimeout(()=>{
         overlay.style.display = 'none';
-        launchCuteScreen();
-        return;
-      }
-    }
-
-    // Draw glitch bands
-    for(let i = glitchBands.length-1; i>=0; i--){
-      const g = glitchBands[i];
-      ctx.fillStyle = g.color + g.life.toFixed(2) + ')';
-      ctx.fillRect(g.offsetX, g.y, W, g.h);
-      g.life -= g.decay * dt;
-      if(g.life <= 0) glitchBands.splice(i,1);
-    }
-
-    // Draw scanlines
-    for(let i=scanLines.length-1;i>=0;i--){
-      const s=scanLines[i];
-      ctx.fillStyle=`rgba(255,255,255,${s.life*0.15})`;
-      ctx.fillRect(0,s.y,W,s.h);
-      s.y+=s.speed*dt;
-      s.life-=s.decay*dt;
-      if(s.y>H||s.life<=0) scanLines.splice(i,1);
-    }
-
-    // Draw explosions
-    for(let i=explosions.length-1;i>=0;i--){
-      const e=explosions[i];
-      e.r = Math.min(e.maxR, e.r + (e.maxR/12)*dt);
-      for(let r=0;r<e.rings;r++){
-        const rr = e.r * (0.5 + r*0.25);
-        ctx.beginPath();
-        ctx.arc(e.x,e.y,rr,0,Math.PI*2);
-        ctx.strokeStyle=`rgba(255,${120+r*40},30,${e.life*(0.6-r*0.15)})`;
-        ctx.lineWidth=2-r*0.3;
-        ctx.stroke();
-      }
-      // Inner bright core
-      const g2=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,e.r*0.5);
-      g2.addColorStop(0,`rgba(255,240,180,${e.life*0.5})`);
-      g2.addColorStop(1,'rgba(255,100,0,0)');
-      ctx.fillStyle=g2;
-      ctx.beginPath();
-      ctx.arc(e.x,e.y,e.r*0.5,0,Math.PI*2);
-      ctx.fill();
-      e.life-=e.decay*dt;
-      if(e.life<=0) explosions.splice(i,1);
-    }
-
-    // Draw smoke
-    for(let i=smokeParticles.length-1;i>=0;i--){
-      const s=smokeParticles[i];
-      const sg=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.size);
-      sg.addColorStop(0,`rgba(${s.gray},${s.gray},${s.gray},${s.life*0.18})`);
-      sg.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=sg;
-      ctx.beginPath();
-      ctx.arc(s.x,s.y,s.size,0,Math.PI*2);
-      ctx.fill();
-      s.x+=s.vx*dt; s.y+=s.vy*dt;
-      s.size+=0.6*dt;
-      s.life-=s.decay*dt;
-      if(s.life<=0) smokeParticles.splice(i,1);
-    }
-
-    // Draw shards
-    for(let i=shards.length-1;i>=0;i--){
-      const sh=shards[i];
-      ctx.save();
-      ctx.translate(sh.x,sh.y);
-      ctx.rotate(sh.rot);
-      ctx.fillStyle=sh.color.replace(')',`,${sh.life})`).replace('hsl','hsla');
-      ctx.fillRect(-sh.w/2,-sh.h/2,sh.w,sh.h);
-      ctx.restore();
-      sh.x+=sh.vx*dt; sh.y+=sh.vy*dt;
-      sh.vy+=sh.gravity*dt;
-      sh.rot+=sh.rotV*dt;
-      sh.life-=sh.decay*dt;
-      if(sh.life<=0) shards.splice(i,1);
-    }
-
-    // Draw sparks with tails
-    for(let i=particles.length-1;i>=0;i--){
-      const p=particles[i];
-      p.tail.push({x:p.x,y:p.y});
-      if(p.tail.length>8) p.tail.shift();
-      // Draw tail
-      for(let j=1;j<p.tail.length;j++){
-        const alpha=(j/p.tail.length)*p.life*0.5;
-        ctx.beginPath();
-        ctx.moveTo(p.tail[j-1].x,p.tail[j-1].y);
-        ctx.lineTo(p.tail[j].x,p.tail[j].y);
-        ctx.strokeStyle=p.color.replace('hsl','hsla').replace(')',`,${alpha})`);
-        ctx.lineWidth=(j/p.tail.length)*p.size*0.5;
-        ctx.stroke();
-      }
-      // Draw head
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2);
-      const pg=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*p.life*2);
-      pg.addColorStop(0,p.color.replace('hsl','hsla').replace(')',`,${p.life})`));
-      pg.addColorStop(1,'rgba(255,200,100,0)');
-      ctx.fillStyle=pg;
-      ctx.fill();
-      p.x+=p.vx*dt; p.y+=p.vy*dt;
-      p.vy+=p.gravity*dt;
-      p.vx*=0.985;
-      p.life-=p.decay*dt;
-      if(p.life<=0) particles.splice(i,1);
-    }
-
-    // Draw glitch texts
-    for(let i=activeTexts.length-1;i>=0;i--){
-      const gt=activeTexts[i];
-      ctx.font=`${gt.size}px "Space Mono", monospace`;
-      ctx.fillStyle=gt.color;
-      ctx.globalAlpha=gt.life;
-      ctx.fillText(gt.text, gt.x+gt.offsetX*(1-gt.life), gt.y);
-      ctx.globalAlpha=1;
-      gt.life-=gt.decay*dt;
-      gt.offsetX*=0.9;
-      if(gt.life<=0) activeTexts.splice(i,1);
-    }
-
-    // White flash
-    if(whiteFlashAlpha>0){
-      ctx.fillStyle=`rgba(255,255,255,${whiteFlashAlpha})`;
-      ctx.fillRect(0,0,W,H);
-    }
-
-    // Final white fill
-    if(finalWhite>0){
-      // Shift to pastel during the white-out
-      const r=255, g=Math.floor(230+finalWhite*25), b=Math.floor(230+finalWhite*25);
-      ctx.fillStyle=`rgba(${r},${g},${b},${finalWhite})`;
-      ctx.fillRect(0,0,W,H);
-    }
-
-    ctx.restore();
-  }
-
-  requestAnimationFrame(draw);
+        overlay.style.transition = '';
+        // Kick off letter animations
+        animateLetterScreen();
+      }, 820);
+    }, 200);
+  }, 620);
 }
 
-// ── CUTE SCREEN SEQUENCE ──
-function launchCuteScreen(){
-  const screen = document.getElementById('cuteScreen');
-  screen.style.display = 'flex';
+// ── LETTER SCREEN SEQUENCE ──
+function animateLetterScreen(){
+  // Spawn light petals on paper bg
+  spawnLetterPetals();
 
-  // Spawn falling petals
-  spawnPetals();
-
-  // Animate card elements in sequence
+  // Wax seal appears
   setTimeout(()=>{
-    document.querySelectorAll('.cute-corner').forEach(c => c.classList.add('visible'));
-    document.getElementById('cuteCard').classList.add('visible');
-  }, 100);
+    document.getElementById('waxSealWrap').classList.add('visible');
+  }, 120);
+
+  // Seal cracks open
+  setTimeout(()=>{
+    document.getElementById('waxSeal').classList.add('cracked');
+  }, 760);
+
+  // Paper unfolds
+  setTimeout(()=>{
+    document.getElementById('letterPaper').classList.add('visible');
+  }, 1100);
+
+  // Date appears
+  setTimeout(()=>{
+    document.getElementById('letterDate').classList.add('visible');
+  }, 1500);
+
+  // Salutation
+  setTimeout(()=>{
+    document.getElementById('letterSal').classList.add('visible');
+  }, 1800);
+
+  // Typewrite the body
+  const letterText = `Happy birthday, Babyyyyy.\n\nYou just cracked a PIN, solved a colour sequence, and picked a gift — and you probably didn't even hesitate once.\n\nThat's you. You figure things out.\n\nI hope 21 feels like unlocking something. A new version. A little braver, a little softer, a little more sure of yourself — even though you were always all of those things already.\n\nI'm really glad you exist. The world is genuinely better with you in it.`;
 
   setTimeout(()=>{
-    document.getElementById('cuteStamp').classList.add('visible');
-  }, 400);
+    typewriteLetter(letterText, ()=>{
+      // Show sign-off after typing ends
+      setTimeout(()=>{
+        document.getElementById('letterSign').classList.add('visible');
+      }, 400);
 
-  setTimeout(()=>{
-    document.getElementById('cuteName').classList.add('visible');
-  }, 650);
-
-  setTimeout(()=>{
-    document.getElementById('cuteAgeLine').classList.add('visible');
-  }, 1000);
-
-  setTimeout(()=>{
-    document.getElementById('cuteDivider').classList.add('visible');
-  }, 1200);
-
-  setTimeout(()=>{
-    document.getElementById('cuteMessage').classList.add('visible');
-  }, 1450);
-
-  setTimeout(()=>{
-    document.getElementById('cuteBottom').classList.add('visible');
-    spawnFloatingHearts();
+      // Easter egg trigger appears after sign-off settles
+      setTimeout(()=>{
+        document.getElementById('easterTrigger').classList.add('visible');
+      }, 1800);
+    });
   }, 2200);
 }
 
-function spawnPetals(){
-  const petals = ['🌸','🌷','🌼','✿','❀','🪷','🌺'];
-  for(let i = 0; i < 28; i++){
-    setTimeout(()=>{
-      const p = document.createElement('div');
-      p.className = 'petal';
-      const dur = 6 + Math.random() * 8;
-      const delay = Math.random() * 4;
-      const sway = (Math.random() - 0.5) * 120;
-      const rot = (Math.random() - 0.5) * 720;
-      p.textContent = petals[Math.floor(Math.random() * petals.length)];
-      p.style.cssText = `
-        left: ${Math.random() * 100}%;
-        top: -40px;
-        font-size: ${12 + Math.random() * 14}px;
-        --dur: ${dur}s;
-        --delay: ${delay}s;
-        --sway: ${sway}px;
-        --rot: ${rot}deg;
-      `;
-      document.body.appendChild(p);
-      setTimeout(()=> p.remove(), (dur + delay) * 1000 + 500);
-    }, i * 180);
+function typewriteLetter(text, onDone){
+  const el = document.getElementById('letterBody');
+  el.innerHTML = '<span class="cursor"></span>';
+  let i = 0;
+  const speed = 28;
+
+  function tick(){
+    if(i >= text.length){
+      el.innerHTML = text.replace(/\n/g, '<br>');
+      if(onDone) onDone();
+      return;
+    }
+    const char = text[i];
+    el.innerHTML = text.slice(0, i + 1).replace(/\n/g, '<br>') + '<span class="cursor"></span>';
+    i++;
+    // Vary speed slightly for natural feel
+    const delay = char === '\n' ? 120 : char === ',' || char === '.' ? 80 + Math.random()*60 : speed + Math.random() * 20;
+    setTimeout(tick, delay);
   }
-  // Keep spawning
-  setInterval(()=>{
-    const p = document.createElement('div');
-    p.className = 'petal';
-    const dur = 6 + Math.random() * 8;
-    const sway = (Math.random() - 0.5) * 120;
-    const rot = (Math.random() - 0.5) * 720;
-    p.textContent = petals[Math.floor(Math.random() * petals.length)];
-    p.style.cssText = `
-      left: ${Math.random() * 100}%;
-      top: -40px;
-      font-size: ${12 + Math.random() * 14}px;
-      --dur: ${dur}s;
-      --delay: 0s;
-      --sway: ${sway}px;
-      --rot: ${rot}deg;
-    `;
-    document.body.appendChild(p);
-    setTimeout(()=> p.remove(), (dur + 0.5) * 1000);
-  }, 900);
+  tick();
 }
 
-function spawnFloatingHearts(){
-  const container = document.getElementById('floatingHearts');
-  const icons = ['💗','💕','🤍','💖','✦','💓'];
-  const positions = [
-    {top:'15%',left:'5%'},{top:'25%',right:'6%'},
-    {top:'65%',left:'4%'},{top:'70%',right:'5%'},
-    {top:'45%',left:'2%'},{top:'40%',right:'3%'},
-    {top:'10%',left:'20%'},{top:'12%',right:'18%'},
-  ];
-  positions.forEach((pos, i) => {
-    const h = document.createElement('div');
-    h.className = 'float-heart';
-    h.textContent = icons[i % icons.length];
-    const dur = 3 + Math.random() * 2;
-    const delay = Math.random() * 1.5;
-    h.style.cssText = Object.entries(pos).map(([k,v])=>`${k}:${v}`).join(';') + `;--dur:${dur}s;--delay:${delay}s;position:fixed;`;
-    container.appendChild(h);
-    setTimeout(()=> h.classList.add('visible'), 100 + i * 150);
-  });
+// ── EASTER EGG MODAL ──
+function openEasterModal(){
+  const modal = document.getElementById('easterModal');
+  modal.style.display = 'flex';
+  void modal.offsetWidth;
+  modal.classList.add('visible');
+  setTimeout(()=>{ document.getElementById('easterInput').focus(); }, 200);
+}
+
+function handleModalBackdropClick(e){
+  if(e.target === document.getElementById('easterModal')) closeEasterModal();
+}
+
+function closeEasterModal(){
+  const modal = document.getElementById('easterModal');
+  modal.classList.remove('visible');
+  setTimeout(()=>{ modal.style.display = 'none'; }, 400);
+}
+
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeEasterModal();
+});
+
+document.getElementById('easterInput').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') checkEaster();
+});
+
+function checkEaster(){
+  const val = document.getElementById('easterInput').value.trim();
+  const errEl = document.getElementById('easterError');
+
+  if(val === '6'){
+    closeEasterModal();
+    setTimeout(()=>{ launchILY(); }, 450);
+  } else {
+    errEl.textContent = 'ACCESS DENIED';
+    const inner = document.getElementById('easterModalInner');
+    inner.classList.add('easter-shake');
+    setTimeout(()=>{ inner.classList.remove('easter-shake'); }, 450);
+    setTimeout(()=>{ errEl.textContent = ''; }, 2000);
+    document.getElementById('easterInput').value = '';
+  }
+}
+
+// ── I LOVE YOU SCREEN ──
+function launchILY(){
+  const screen = document.getElementById('ilyScreen');
+  screen.style.display = 'flex';
+
+  // Stagger the three words in
+  setTimeout(()=>{ document.getElementById('ilyW1').classList.add('visible'); }, 200);
+  setTimeout(()=>{ document.getElementById('ilyW2').classList.add('visible'); }, 700);
+  setTimeout(()=>{ document.getElementById('ilyW3').classList.add('visible'); }, 1200);
+}
+
+function spawnLetterPetals(){
+  const petals = ['🌸','🌷','✿','❀','🌺'];
+  const spawn = ()=>{
+    const p = document.createElement('div');
+    p.className = 'petal-letter';
+    const dur = 7 + Math.random() * 9;
+    const sway = (Math.random() - 0.5) * 100;
+    const rot = (Math.random() - 0.5) * 540;
+    p.textContent = petals[Math.floor(Math.random() * petals.length)];
+    p.style.cssText = `left:${Math.random()*100}%;top:-40px;font-size:${10+Math.random()*10}px;--dur:${dur}s;--delay:0s;--sway:${sway}px;--rot:${rot}deg;`;
+    document.body.appendChild(p);
+    setTimeout(()=> p.remove(), dur * 1000 + 500);
+  };
+  for(let i = 0; i < 12; i++) setTimeout(spawn, i * 600);
+  setInterval(spawn, 1800);
 }
 </script>
 </body>
