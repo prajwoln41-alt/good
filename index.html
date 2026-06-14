@@ -710,7 +710,7 @@
     display: none;
     align-items: flex-start;
     justify-content: center;
-    overflow-y: hidden;
+    overflow-y: auto;
     overflow-x: hidden;
     padding: 40px 20px 80px;
     z-index: 8000;
@@ -718,9 +718,6 @@
     background-image:
       radial-gradient(ellipse at 30% 0%, rgba(210,180,140,0.3) 0%, transparent 60%),
       radial-gradient(ellipse at 70% 100%, rgba(180,160,120,0.2) 0%, transparent 60%);
-  }
-  #letterScreen.scrollable {
-    overflow-y: auto;
   }
   /* wrapper to stack seal + paper vertically, centered */
   #letterInner {
@@ -1733,8 +1730,6 @@ function animateLetterScreen(){
 
   setTimeout(()=>{
     typewriteLetter(letterText, ()=>{
-      // Enable scrolling once letter is fully typed
-
       // Show sign-off after typing ends
       setTimeout(()=>{
         document.getElementById('letterSign').classList.add('visible');
