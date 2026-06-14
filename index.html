@@ -655,6 +655,39 @@
   }
   .confirm-sub.visible { opacity: 1; }
 
+  /* ── SEAL TRANSITION OVERLAY ── */
+  #sealTransition {
+    position: fixed;
+    inset: 0;
+    z-index: 9100;
+    pointer-events: none;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: transparent;
+  }
+  #sealTransition.active {
+    display: flex;
+  }
+  .seal-transition-circle {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #8b1a1a;
+    transform: scale(1);
+    opacity: 1;
+    transform-origin: center center;
+  }
+  @keyframes sealExpand {
+    0%   { transform: scale(1) rotate(0deg); }
+    30%  { transform: scale(4) rotate(120deg); }
+    60%  { transform: scale(14) rotate(300deg); background: #8b1a1a; }
+    80%  { transform: scale(28) rotate(480deg); background: #c0392b; }
+    100% { transform: scale(60) rotate(600deg); background: #fff; }
+  }
+
   /* ── ELEGANT FADE TRANSITION ── */
   #fadeOverlay {
     position: fixed;
@@ -675,9 +708,9 @@
     position: fixed;
     inset: 0;
     display: none;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
     padding: 40px 20px 80px;
     z-index: 8000;
@@ -685,6 +718,9 @@
     background-image:
       radial-gradient(ellipse at 30% 0%, rgba(210,180,140,0.3) 0%, transparent 60%),
       radial-gradient(ellipse at 70% 100%, rgba(180,160,120,0.2) 0%, transparent 60%);
+  }
+  #letterScreen.scrollable {
+    overflow-y: auto;
   }
   /* wrapper to stack seal + paper vertically, centered */
   #letterInner {
@@ -1370,6 +1406,11 @@
   <canvas id="chaosCanvas"></canvas>
 </div>
 
+<!-- SEAL TRANSITION OVERLAY -->
+<div id="sealTransition">
+  <div class="seal-transition-circle" id="sealTransCircle"></div>
+</div>
+
 <!-- ══════════════════════════════════════════
      LETTER SCREEN — The real finale
      ══════════════════════════════════════════ -->
@@ -1604,41 +1645,57 @@ function showConfirmation(){
   }, 2500);
 
   setTimeout(()=>{
-    triggerElegantFade();
+    triggerSealTransition();
   }, 4400);
 }
 
-// ── ELEGANT FADE TRANSITION ──
-function triggerElegantFade(){
-  const overlay = document.getElementById('fadeOverlay');
-  overlay.style.display = 'block';
+// ── SEAL CIRCLE TRANSITION (black → white, rotating expanding circle) ──
+function triggerSealTransition(){
+  const overlay = document.getElementById('sealTransition');
+  const circle = document.getElementById('sealTransCircle');
 
-  // Trigger reflow so transition fires
-  void overlay.offsetWidth;
+  // Position circle at center of viewport
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  circle.style.left = (vw / 2 - 36) + 'px';
+  circle.style.top  = (vh / 2 - 36) + 'px';
+  circle.style.background = '#8b1a1a';
+  circle.style.transform = 'scale(1) rotate(0deg)';
+  circle.style.transition = 'none';
 
-  // Fade to black over 600ms
-  overlay.classList.add('fade-in');
+  overlay.classList.add('active');
 
+  // Force reflow then animate
+  void circle.offsetWidth;
+
+  // Duration: 1.4s expand + rotate, colour shifts mid-way to white
+  const duration = 1400;
+  circle.style.transition = `transform ${duration}ms cubic-bezier(0.4,0,0.2,1), background ${duration}ms ease`;
+  // Scale needs to cover entire screen diagonal from center
+  const diagonal = Math.sqrt(vw * vw + vh * vh);
+  const scale = Math.ceil((diagonal / 72) * 2);
+  circle.style.transform = `scale(${scale}) rotate(600deg)`;
+  circle.style.background = '#ffffff';
+
+  // At midpoint switch screens underneath
   setTimeout(()=>{
-    // Hide confirm screen while black
     document.getElementById('confirmScreen').classList.add('hidden');
-
-    // Show letter screen underneath
     document.getElementById('letterScreen').style.display = 'flex';
+  }, duration * 0.55);
 
-    // Hold black for 200ms then fade out overlay
+  // After expand completes, fade overlay out
+  setTimeout(()=>{
+    circle.style.transition = `opacity 0.5s ease`;
+    circle.style.opacity = '0';
     setTimeout(()=>{
-      overlay.classList.remove('fade-in');
-      overlay.style.transition = 'opacity 0.8s ease-in-out';
-
-      setTimeout(()=>{
-        overlay.style.display = 'none';
-        overlay.style.transition = '';
-        // Kick off letter animations
-        animateLetterScreen();
-      }, 820);
-    }, 200);
-  }, 620);
+      overlay.classList.remove('active');
+      circle.style.opacity = '1';
+      circle.style.transition = 'none';
+      circle.style.transform = 'scale(1) rotate(0deg)';
+      // Kick off letter animations
+      animateLetterScreen();
+    }, 520);
+  }, duration + 60);
 }
 
 // ── LETTER SCREEN SEQUENCE ──
@@ -1676,6 +1733,9 @@ function animateLetterScreen(){
 
   setTimeout(()=>{
     typewriteLetter(letterText, ()=>{
+      // Enable scrolling once letter is fully typed
+      document.getElementById('letterScreen').classList.add('scrollable');
+
       // Show sign-off after typing ends
       setTimeout(()=>{
         document.getElementById('letterSign').classList.add('visible');
